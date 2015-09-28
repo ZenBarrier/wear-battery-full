@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory
+        android:title="Settings">
+        <CheckBoxPreference
+            android:key="battery_charging"
+            android:title="@string/pref_charging"
+            android:defaultValue="true" />
+        <CheckBoxPreference
+            android:dependency="battery_charging"
+            android:key="exact_battery_level"
+            android:title="@string/pref_exact_battery_level"
+            android:defaultValue="true"
+            />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Notifications">
+        <CheckBoxPreference
+            android:key="vibrate"
+            android:title="@string/pref_vibrate"
+            android:defaultValue="true"
+            />
+        <RingtonePreference
+            android:key="ringtone_uri"
+            android:title="@string/pref_select_ringtone"
+            android:showDefault="true"
+            android:ringtoneType="notification"
+            android:showSilent="true"
+            android:defaultValue="content://settings/system/notification_sound"
+            />
+
+        <CheckBoxPreference
+            android:key="light"
+            android:title="Light"
+            android:defaultValue="true"
+            />
+        <ListPreference
+            android:key="color"
+            android:dependency="light"
+            android:title="LED Color"
+            android:entries="@array/color_entries"
+            android:entryValues="@array/color_values"
+            android:defaultValue="-256"
+            android:summary="%s"
+
+            />
+
+
+    </PreferenceCategory>
+
+    <PreferenceCategory
+        android:title="Other">
+        <CheckBoxPreference
+            android:key="disconnected"
+            android:title="@string/pref_disconnected"
+            android:defaultValue="true" />
+        </PreferenceCategory>
+</PreferenceScreen>

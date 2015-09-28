@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="color_entries">
+        <item>Yellow</item>
+        <item>Cyan</item>
+        <item>Red</item>
+        <item>Green</item>
+        <item>Magenta</item>
+        <item>White</item>
+    </string-array>
+    <string-array name="color_values">
+        <item>-256</item>
+        <item>-16711681</item>
+        <item>-65536</item>
+        <item>-16711936</item>
+        <item>-65281</item>
+        <item>-1</item>
+    </string-array>
+</resources>
