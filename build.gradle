@@ -17,3 +17,9 @@ allprojects {
         jcenter()
     }
 }
+
+ext {
+    TARGET_SDK_VERSION = 21
+    VERSION_CODE = 4
+    VERSION_NAME = '1.1.2'
+}
