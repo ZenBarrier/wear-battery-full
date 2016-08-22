@@ -47,6 +47,12 @@
             android:summary="%s"
 
             />
+        <CheckBoxPreference
+            android:key="insistent"
+            android:title="@string/pref_insistent"
+            android:summary="@string/pref_insistent_summary"
+            android:defaultValue="false"
+            />
 
 
     </PreferenceCategory>

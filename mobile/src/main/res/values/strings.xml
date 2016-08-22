@@ -30,5 +30,7 @@
     <string name="main_activity_intro">This app will alert you when the battery on your Android Wear device is fully charged.</string>
     <string name="main_button">Go to Settings</string>
     <string name="pref_disconnected">Notify if wear device disconnected</string>
+    <string name="pref_insistent">Repeat alert until dismissed</string>
+    <string name="pref_insistent_summary">The device will continue to alert until you read the notification or dismiss it.</string>
 
 </resources>
