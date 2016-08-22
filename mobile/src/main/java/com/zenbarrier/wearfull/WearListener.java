@@ -1,5 +1,6 @@
 package com.zenbarrier.wearfull;
 
+import android.app.Notification;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.content.Context;
@@ -141,6 +142,8 @@ public class WearListener extends WearableListenerService {
         final int color = Integer.parseInt(mySharedPreferences.getString("color", "-256"));
         //Should we vibrate?
         final boolean vibrate = mySharedPreferences.getBoolean("vibrate", true);
+        //Insistently alerting?
+        final boolean insistent = mySharedPreferences.getBoolean("insistent", false);
         //what sound?
         final String sound = mySharedPreferences.getString("ringtone_uri",
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
@@ -171,8 +174,14 @@ public class WearListener extends WearableListenerService {
         //extend watch settings
         builder.extend(wearableExtender);
 
+        Notification notification = builder.build();
+
+        if(insistent) {
+            notification.flags |= Notification.FLAG_INSISTENT;
+        }
+
         NotificationManager nm = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        nm.notify(FULL_ID, builder.build());
+        nm.notify(FULL_ID, notification);
     }
 
     private void chargingNotify(int level){
