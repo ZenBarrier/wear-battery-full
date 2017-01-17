@@ -10,6 +10,9 @@ import android.preference.Preference;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
@@ -32,21 +35,29 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
         // Load the preferences from an XML resource
         addPreferencesFromResource(R.xml.preferences);
 
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+
         //get shared prefs
         SharedPreferences sharedPreferences = getPreferenceScreen().getSharedPreferences();
         sharedPreferences.registerOnSharedPreferenceChangeListener(this);
-
         //get context
         Context ctx = this.getActivity();
 
         //load sound title on start
-        Uri uri = Uri.parse(sharedPreferences.getString("ringtone_uri", ""));
-        String title = RingtoneManager.getRingtone(ctx, uri).getTitle(ctx);
-        Log.d(PrefsFragment.class.getSimpleName(), title);
-        findPreference("ringtone_uri").setSummary(title);
-        if(title.toLowerCase().contains("unknown")){
-            findPreference("ringtone_uri").setSummary("Silent");
+        try {
+            Uri uri = Uri.parse(sharedPreferences.getString("ringtone_uri", ""));
+            String title = RingtoneManager.getRingtone(ctx, uri).getTitle(ctx);
+            Log.d(PrefsFragment.class.getSimpleName(), title);
+            findPreference("ringtone_uri").setSummary(title);
         }
+        catch(Exception e){
+            findPreference("ringtone_uri").setSummary("");
+        }
+
+        return super.onCreateView(inflater, container, savedInstanceState);
     }
 
     @Override
