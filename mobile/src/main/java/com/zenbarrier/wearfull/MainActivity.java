@@ -30,12 +30,10 @@ import java.util.HashSet;
 
 public class MainActivity extends ActionBarActivity
         implements
-        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener
-{
+        GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
 
     private GoogleApiClient mGoogleApiClient;
-
 
 
     @Override
@@ -102,29 +100,15 @@ public class MainActivity extends ActionBarActivity
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-
-        loadPref();
-    }
-
-    private void loadPref(){
-        SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-
-        boolean my_checkbox_preference = mySharedPreferences.getBoolean("battery_level_show", false);
-
-        //Toast.makeText(this,String.valueOf(my_checkbox_preference),Toast.LENGTH_SHORT).show();
-
-
     }
 
 
     @Override
     public void onConnected(Bundle bundle) {
-
     }
 
     @Override
     public void onConnectionSuspended(int i) {
-
     }
 
     @Override
@@ -173,7 +157,9 @@ public class MainActivity extends ActionBarActivity
         }
     }
 
-    /** Sends an RPC to start a fullscreen Activity on the wearable. */
+    /**
+     * Sends an RPC to start a fullscreen Activity on the wearable.
+     */
     public void onStartWearableActivityClick(View view) {
         Log.d(TAG, "Generating RPC");
 
@@ -189,6 +175,7 @@ public class MainActivity extends ActionBarActivity
                     @Override
                     public void onConnected(Bundle connectionHint) {
                     }
+
                     @Override
                     public void onConnectionSuspended(int cause) {
                     }
@@ -207,14 +194,14 @@ public class MainActivity extends ActionBarActivity
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
         Boolean charging = sharedPreferences.getBoolean("battery_charging", true);
-        Boolean level = sharedPreferences.getBoolean("exact_battery_level",false);
+        Boolean level = sharedPreferences.getBoolean("exact_battery_level", false);
 
         final PutDataMapRequest putRequest = PutDataMapRequest.create("/PREF");
 
         final DataMap map = putRequest.getDataMap();
-        map.putBoolean("battery_charging",charging);
+        map.putBoolean("battery_charging", charging);
         map.putBoolean("exact_battery_level", level);
-        Wearable.DataApi.putDataItem(mGoogleApiClient,  putRequest.asPutDataRequest());
+        Wearable.DataApi.putDataItem(mGoogleApiClient, putRequest.asPutDataRequest());
 
 
     }
