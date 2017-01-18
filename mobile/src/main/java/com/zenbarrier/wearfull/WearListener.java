@@ -9,31 +9,18 @@ import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.media.RingtoneManager;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
-
-import com.google.android.gms.common.ConnectionResult;
-import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.data.FreezableUtils;
-import com.google.android.gms.wearable.DataEvent;
 import com.google.android.gms.wearable.DataEventBuffer;
-import com.google.android.gms.wearable.DataItem;
-import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.DataMapItem;
 import com.google.android.gms.wearable.MessageEvent;
-import com.google.android.gms.wearable.Wearable;
 import com.google.android.gms.wearable.WearableListenerService;
-
-import java.util.List;
-import java.util.concurrent.TimeUnit;
 
 /**
  * Created by Anthony on 3/6/2015.
+ * This file is the fragment that holds all the preferences
  */
 public class WearListener extends WearableListenerService {
     private static final int UNPLUGGED_ID = 0x001;
@@ -202,7 +189,7 @@ public class WearListener extends WearableListenerService {
                 .setShowWhen(false)
                 .setOngoing(true)
                         //do not show this on other devices
-                .setLocalOnly(true)
+                .setLocalOnly(false)
                         //don't alert the phone every time this updates.
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW).setContentIntent(
