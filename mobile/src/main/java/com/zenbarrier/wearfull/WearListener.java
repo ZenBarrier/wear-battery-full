@@ -28,6 +28,8 @@ public class WearListener extends WearableListenerService {
     private static final int CHARGING_ID = 0x003;
     private static final int CONNECTION_LOST_ID = 0x004;
 
+    public static boolean closedCharge = false;
+
     public WearListener(){}
 
 
@@ -35,7 +37,6 @@ public class WearListener extends WearableListenerService {
     public void onMessageReceived(MessageEvent messageEvent) {
         String path = messageEvent.getPath();
         Log.d("WearListener",path);
-
 
         NotificationManager manager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
 
@@ -47,19 +48,26 @@ public class WearListener extends WearableListenerService {
 
         if(path.contains("/charging") && show_charging){
             int level =  Integer.parseInt(path.replaceAll("\\D", ""));
-            chargingNotify(level);
-            manager.cancel(FULL_ID);
-            manager.cancel(UNPLUGGED_ID);
+            if(level == 0){
+                closedCharge = false;
+            }
+            if(!closedCharge) {
+                chargingNotify(level);
+                manager.cancel(FULL_ID);
+                manager.cancel(UNPLUGGED_ID);
+            }
             return;
         }
 
         if(path.contains("/full")){
             manager.cancel(CHARGING_ID);
             manager.cancel(UNPLUGGED_ID);
+            closedCharge = false;
             fullNotify();
         }
         if(path.contains("/unplugged")){
             manager.cancel(CHARGING_ID);
+            closedCharge = false;
             unplugNotify();
         }
 
@@ -179,7 +187,9 @@ public class WearListener extends WearableListenerService {
         //show exact battery level?
         final boolean exact_battery_level = mySharedPreferences.getBoolean("exact_battery_level", false);
 
-
+        Intent cancelIntent = new Intent(getApplicationContext(), NotificationCloseReceiver.class);
+        cancelIntent.putExtra("notificationId", CHARGING_ID);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(getApplicationContext(), 0, cancelIntent, 0);
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSmallIcon(R.drawable.ic_battery_level)
@@ -187,9 +197,13 @@ public class WearListener extends WearableListenerService {
                 .setContentText("Will alert when the watch is fully charged")
                 .setAutoCancel(false)
                 .setShowWhen(false)
+                .setPriority(Notification.PRIORITY_MAX)
+                .setWhen(0)
+                .addAction(android.R.drawable.ic_delete, "Close", pendingIntent)
+                .setContentIntent(pendingIntent)
                 .setOngoing(true)
                         //do not show this on other devices
-                .setLocalOnly(false)
+                .setLocalOnly(true)
                         //don't alert the phone every time this updates.
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.PRIORITY_LOW).setContentIntent(
