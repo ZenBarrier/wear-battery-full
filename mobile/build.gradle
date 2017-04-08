@@ -6,7 +6,7 @@ android {
 
     defaultConfig {
         applicationId "com.zenbarrier.wearfull"
-        minSdkVersion 16
+        minSdkVersion 17
         targetSdkVersion rootProject.ext.TARGET_SDK_VERSION
         versionCode rootProject.ext.VERSION_CODE
         versionName rootProject.ext.VERSION_NAME

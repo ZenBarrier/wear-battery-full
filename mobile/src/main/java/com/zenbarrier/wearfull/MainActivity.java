@@ -1,13 +1,16 @@
 package com.zenbarrier.wearfull;
 
 
+import android.content.ActivityNotFoundException;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -28,7 +31,7 @@ import java.util.Collection;
 import java.util.HashSet;
 
 
-public class MainActivity extends ActionBarActivity
+public class MainActivity extends AppCompatActivity
         implements
         GoogleApiClient.ConnectionCallbacks, GoogleApiClient.OnConnectionFailedListener {
     private static final String TAG = MainActivity.class.getSimpleName();
@@ -112,7 +115,7 @@ public class MainActivity extends ActionBarActivity
     }
 
     @Override
-    public void onConnectionFailed(ConnectionResult connectionResult) {
+    public void onConnectionFailed(@NonNull ConnectionResult connectionResult) {
         Log.e("Wear", "Failed to connect to Google Play Services");
         Toast.makeText(this,"Failed to connect to wear.",Toast.LENGTH_LONG).show();
     }
@@ -135,7 +138,7 @@ public class MainActivity extends ActionBarActivity
                 mGoogleApiClient, node, "/start", new byte[0]).setResultCallback(
                 new ResultCallback<MessageApi.SendMessageResult>() {
                     @Override
-                    public void onResult(MessageApi.SendMessageResult sendMessageResult) {
+                    public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
                         if (!sendMessageResult.getStatus().isSuccess()) {
                             Log.e(TAG, "Failed to send message with status code: "
                                     + sendMessageResult.getStatus().getStatusCode());
@@ -143,6 +146,16 @@ public class MainActivity extends ActionBarActivity
                     }
                 }
         );
+    }
+
+    public void writeReview(View view) {
+        Uri uri = Uri.parse("market://details?id=" + getPackageName());
+        Intent marketIntent = new Intent(Intent.ACTION_VIEW, uri);
+        try{
+            startActivity(marketIntent);
+        }catch (ActivityNotFoundException e){
+            Toast.makeText(this, " unable to find market app", Toast.LENGTH_LONG).show();
+        }
     }
 
     private class StartWearableActivityTask extends AsyncTask<Void, Void, Void> {
@@ -182,7 +195,7 @@ public class MainActivity extends ActionBarActivity
                 })
                 .addOnConnectionFailedListener(new GoogleApiClient.OnConnectionFailedListener() {
                     @Override
-                    public void onConnectionFailed(ConnectionResult result) {
+                    public void onConnectionFailed(@NonNull ConnectionResult result) {
                     }
                 })
                 .addApi(Wearable.API)
