@@ -206,14 +206,16 @@ public class MainActivity extends AppCompatActivity
         //   return;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Boolean charging = sharedPreferences.getBoolean("battery_charging", true);
-        Boolean level = sharedPreferences.getBoolean("exact_battery_level", false);
+        Boolean charging = sharedPreferences.getBoolean(getString(R.string.key_pref_battery_charging), true);
+        Boolean level = sharedPreferences.getBoolean(getString(R.string.key_pref_exact_battery_level),false);
+        int alert_level = Integer.parseInt(sharedPreferences.getString(getString(R.string.key_pref_charge_level_alert), "100"));
 
         final PutDataMapRequest putRequest = PutDataMapRequest.create("/PREF");
 
         final DataMap map = putRequest.getDataMap();
-        map.putBoolean("battery_charging", charging);
-        map.putBoolean("exact_battery_level", level);
+        map.putBoolean(getString(R.string.key_pref_battery_charging),charging);
+        map.putBoolean(getString(R.string.key_pref_exact_battery_level), level);
+        map.putInt(getString(R.string.key_pref_charge_level_alert), alert_level);
         Wearable.DataApi.putDataItem(mGoogleApiClient, putRequest.asPutDataRequest());
 
 

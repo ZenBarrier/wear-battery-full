@@ -7,11 +7,7 @@ import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
 import android.util.Log;
-import android.widget.Toast;
 
-/**
- * Created by Anthony on 3/2/2015.
- */
 public class BatteryReceiver extends BroadcastReceiver {
 
     private static final String BATTERYRECIEVER_RUNNING_KEY = "receiver_running";
@@ -48,6 +44,7 @@ public class BatteryReceiver extends BroadcastReceiver {
         }
 
 
+        Log.e("bat",batteryPct+">="+charge_level_alert);
         if(status == BatteryManager.BATTERY_STATUS_FULL || level == scale || batteryPct >= charge_level_alert) {
 
             //notify phone that wear device is full
