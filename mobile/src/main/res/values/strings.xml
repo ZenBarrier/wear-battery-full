@@ -33,5 +33,14 @@
     <string name="pref_insistent">Repeat alert until dismissed</string>
     <string name="pref_insistent_summary">The device will continue to alert until you read the notification or dismiss it.</string>
     <string name="write_review">Write Review</string>
+    <string name="key_pref_battery_charging">battery_charging</string>
+    <string name="key_pref_exact_battery_level">exact_battery_level</string>
+    <string name="key_pref_ringtone_uri">ringtone_uri</string>
+    <string name="key_pref_charge_level_alert">charge_level_alert</string>
+    <string name="key_pref_vibrate">vibrate</string>
+    <string name="key_pref_light">light</string>
+    <string name="key_pref_color">color</string>
+    <string name="key_pref_insistent">insistent</string>
+    <string name="key_pref_disconnected">disconnected</string>
 
 </resources>

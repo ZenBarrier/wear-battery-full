@@ -49,13 +49,13 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
 
         //load sound title on start
         try {
-            Uri uri = Uri.parse(sharedPreferences.getString("ringtone_uri", ""));
+            Uri uri = Uri.parse(sharedPreferences.getString(getString(R.string.key_pref_ringtone_uri), ""));
             String title = RingtoneManager.getRingtone(ctx, uri).getTitle(ctx);
             Log.d(PrefsFragment.class.getSimpleName(), title);
-            findPreference("ringtone_uri").setSummary(title);
+            findPreference(getString(R.string.key_pref_ringtone_uri)).setSummary(title);
         }
         catch(Exception e){
-            findPreference("ringtone_uri").setSummary("");
+            findPreference(getString(R.string.key_pref_ringtone_uri)).setSummary("");
         }
 
         return super.onCreateView(inflater, container, savedInstanceState);
@@ -65,7 +65,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
         if(isAdded()) {
             Context ctx = this.getActivity();
-            if (key.equals("ringtone_uri")) {
+            if (key.equals(getString(R.string.key_pref_ringtone_uri))) {
                 Preference preference = findPreference(key);
                 Uri uri = Uri.parse(sharedPreferences.getString(key, ""));
                 String title = RingtoneManager.getRingtone(ctx, uri).getTitle(ctx);
@@ -78,7 +78,7 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
             }
             syncPreferencesToWearable(ctx);
 
-            if(key.contains("battery_charging")) {
+            if(key.contains(getString(R.string.key_pref_battery_charging))) {
                 //cancel the charging notification if set off
                 if(!sharedPreferences.getBoolean(key,true)) {
                     ((NotificationManager) ctx.getSystemService(Context.NOTIFICATION_SERVICE))
@@ -112,14 +112,16 @@ public class PrefsFragment extends PreferenceFragment implements SharedPreferenc
          //   return;
 
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        Boolean charging = sharedPreferences.getBoolean("battery_charging", true);
-        Boolean level = sharedPreferences.getBoolean("exact_battery_level",false);
+        Boolean charging = sharedPreferences.getBoolean(getString(R.string.key_pref_battery_charging), true);
+        Boolean level = sharedPreferences.getBoolean(getString(R.string.key_pref_exact_battery_level),false);
+        int alert_level = Integer.parseInt(sharedPreferences.getString(getString(R.string.key_pref_charge_level_alert), "100"));
 
         final PutDataMapRequest putRequest = PutDataMapRequest.create("/PREF");
 
         final DataMap map = putRequest.getDataMap();
-        map.putBoolean("battery_charging",charging);
-        map.putBoolean("exact_battery_level", level);
+        map.putBoolean(getString(R.string.key_pref_battery_charging),charging);
+        map.putBoolean(getString(R.string.key_pref_exact_battery_level), level);
+        map.putInt(getString(R.string.key_pref_charge_level_alert), alert_level);
         Wearable.DataApi.putDataItem(mGoogleApiClient,  putRequest.asPutDataRequest());
 
 

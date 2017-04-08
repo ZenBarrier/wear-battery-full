@@ -4,17 +4,17 @@
     <PreferenceCategory
         android:title="Settings">
         <CheckBoxPreference
-            android:key="battery_charging"
+            android:key="@string/key_pref_battery_charging"
             android:title="@string/pref_charging"
             android:defaultValue="true" />
         <CheckBoxPreference
-            android:dependency="battery_charging"
-            android:key="exact_battery_level"
+            android:dependency="@string/key_pref_battery_charging"
+            android:key="@string/key_pref_exact_battery_level"
             android:title="@string/pref_exact_battery_level"
             android:defaultValue="true"
             />
         <ListPreference
-            android:key="charge_level_alert"
+            android:key="@string/key_pref_charge_level_alert"
             android:title="Alert at Level"
             android:entries="@array/level_entries"
             android:entryValues="@array/level_values"
@@ -28,12 +28,12 @@
     <PreferenceCategory
         android:title="Notifications">
         <CheckBoxPreference
-            android:key="vibrate"
+            android:key="@string/key_pref_vibrate"
             android:title="@string/pref_vibrate"
             android:defaultValue="true"
             />
         <RingtonePreference
-            android:key="ringtone_uri"
+            android:key="@string/key_pref_ringtone_uri"
             android:title="@string/pref_select_ringtone"
             android:showDefault="true"
             android:ringtoneType="notification"
@@ -42,13 +42,13 @@
             />
 
         <CheckBoxPreference
-            android:key="light"
+            android:key="@string/key_pref_light"
             android:title="Light"
             android:defaultValue="true"
             />
         <ListPreference
-            android:key="color"
-            android:dependency="light"
+            android:key="@string/key_pref_color"
+            android:dependency="@string/key_pref_light"
             android:title="LED Color"
             android:entries="@array/color_entries"
             android:entryValues="@array/color_values"
@@ -57,7 +57,7 @@
 
             />
         <CheckBoxPreference
-            android:key="insistent"
+            android:key="@string/key_pref_insistent"
             android:title="@string/pref_insistent"
             android:summary="@string/pref_insistent_summary"
             android:defaultValue="false"
@@ -69,7 +69,7 @@
     <PreferenceCategory
         android:title="Other">
         <CheckBoxPreference
-            android:key="disconnected"
+            android:key="@string/key_pref_disconnected"
             android:title="@string/pref_disconnected"
             android:defaultValue="true" />
         </PreferenceCategory>

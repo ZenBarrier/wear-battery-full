@@ -18,6 +18,8 @@ import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageEvent;
 import com.google.android.gms.wearable.WearableListenerService;
 
+import java.util.Locale;
+
 /**
  * Created by Anthony on 3/6/2015.
  * This file is the fragment that holds all the preferences
@@ -83,13 +85,13 @@ public class WearListener extends WearableListenerService {
         final SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //is LED light on?
-        final boolean light = mySharedPreferences.getBoolean("light",true);
+        final boolean light = mySharedPreferences.getBoolean(getString(R.string.key_pref_light),true);
         //what color LED light?
-        final int color = Integer.parseInt(mySharedPreferences.getString("color", "-256"));
+        final int color = Integer.parseInt(mySharedPreferences.getString(getString(R.string.key_pref_color), "-256"));
         //Should we vibrate?
-        final boolean vibrate = mySharedPreferences.getBoolean("vibrate", true);
+        final boolean vibrate = mySharedPreferences.getBoolean(getString(R.string.key_pref_vibrate), true);
         //what sound?
-        final String sound = mySharedPreferences.getString("ringtone_uri",
+        final String sound = mySharedPreferences.getString(getString(R.string.key_pref_ringtone_uri),
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
         final Uri alarmSound = Uri.parse(sound);
 
@@ -132,25 +134,25 @@ public class WearListener extends WearableListenerService {
         final SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //is LED light on?
-        final boolean light = mySharedPreferences.getBoolean("light",true);
+        final boolean light = mySharedPreferences.getBoolean(getString(R.string.key_pref_light),true);
         //what color LED light?
-        final int color = Integer.parseInt(mySharedPreferences.getString("color", "-256"));
+        final int color = Integer.parseInt(mySharedPreferences.getString(getString(R.string.key_pref_color), "-256"));
         //Should we vibrate?
-        final boolean vibrate = mySharedPreferences.getBoolean("vibrate", true);
+        final boolean vibrate = mySharedPreferences.getBoolean(getString(R.string.key_pref_vibrate), true);
         //Insistently alerting?
-        final boolean insistent = mySharedPreferences.getBoolean("insistent", false);
+        final boolean insistent = mySharedPreferences.getBoolean(getString(R.string.key_pref_insistent), false);
         //what sound?
-        final String sound = mySharedPreferences.getString("ringtone_uri",
+        final String sound = mySharedPreferences.getString(getString(R.string.key_pref_ringtone_uri),
                 RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION).toString());
         final Uri alarmSound = Uri.parse(sound);
 
-
+        String chargeLevel = mySharedPreferences.getString(getString(R.string.key_pref_charge_level_alert), "100");
 
         final NotificationCompat.Builder builder = new NotificationCompat.Builder(this)
                 .setSound(alarmSound)
                 .setSmallIcon(R.drawable.ic_battery_full)
-                .setContentTitle("Full")
-                .setContentText("The watch is fully charged")
+                .setContentTitle("Done")
+                .setContentText(String.format(Locale.getDefault(), "Watch reached %s%%", chargeLevel))
                 .setAutoCancel(true)
                 .setVisibility(NotificationCompat.VISIBILITY_PUBLIC);
         if(vibrate) {
@@ -185,7 +187,7 @@ public class WearListener extends WearableListenerService {
         final SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
 
         //show exact battery level?
-        final boolean exact_battery_level = mySharedPreferences.getBoolean("exact_battery_level", false);
+        final boolean exact_battery_level = mySharedPreferences.getBoolean(getString(R.string.key_pref_exact_battery_level), false);
 
         Intent cancelIntent = new Intent(getApplicationContext(), NotificationCloseReceiver.class);
         cancelIntent.putExtra("notificationId", CHARGING_ID);
