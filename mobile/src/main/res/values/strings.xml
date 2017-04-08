@@ -32,5 +32,6 @@
     <string name="pref_disconnected">Notify if wear device disconnected</string>
     <string name="pref_insistent">Repeat alert until dismissed</string>
     <string name="pref_insistent_summary">The device will continue to alert until you read the notification or dismiss it.</string>
+    <string name="write_review">Write Review</string>
 
 </resources>
