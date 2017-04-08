@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import android.widget.Toast;
 
 /**
@@ -23,6 +24,7 @@ public class BatteryReceiver extends BroadcastReceiver {
 
         int level = intent.getIntExtra(BatteryManager.EXTRA_LEVEL,-1);
         int scale = intent.getIntExtra(BatteryManager.EXTRA_SCALE,-1);
+        float batteryPct = 100 * level / (float)scale;
 
         //get app settings with manager
         final SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(ctx);
@@ -31,6 +33,8 @@ public class BatteryReceiver extends BroadcastReceiver {
         final boolean charging = mySharedPreferences.getBoolean("battery_charging",true);
         //is notify level?
         final boolean exact_battery_level = mySharedPreferences.getBoolean("exact_battery_level",true);
+
+        final int charge_level_alert = mySharedPreferences.getInt("charge_level_alert", 100);
 
         //allows app to check if this receiver is registered
         mySharedPreferences.edit().putBoolean(BATTERYRECIEVER_RUNNING_KEY,true).apply();
@@ -44,8 +48,7 @@ public class BatteryReceiver extends BroadcastReceiver {
         }
 
 
-
-        if(status == BatteryManager.BATTERY_STATUS_FULL || level == scale) {
+        if(status == BatteryManager.BATTERY_STATUS_FULL || level == scale || batteryPct >= charge_level_alert) {
 
             //notify phone that wear device is full
             Intent notifyPhone = new Intent(ctx, NotifyMobileService.class);

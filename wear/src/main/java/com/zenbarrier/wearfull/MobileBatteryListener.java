@@ -71,12 +71,15 @@ public class MobileBatteryListener extends WearableListenerService {
                     //show level pref bool
                     Boolean exact_battery_level = dataMap.getBoolean("exact_battery_level");
 
+                    int charge_level_alert = dataMap.getInt("charge_level_alert", 100);
+
                     //get the pref manager
                     SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(this);
                     //open an editor to store prefs
                     SharedPreferences.Editor editor = sharedPref.edit();
                     editor.putBoolean("battery_charging",battery_charging);
                     editor.putBoolean("exact_battery_level",exact_battery_level);
+                    editor.putInt("charge_level_alert", charge_level_alert);
                     //store the prefs
                     editor.commit();
 
