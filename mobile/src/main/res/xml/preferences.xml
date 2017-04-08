@@ -13,6 +13,15 @@
             android:title="@string/pref_exact_battery_level"
             android:defaultValue="true"
             />
+        <ListPreference
+            android:key="charge_level_alert"
+            android:title="Alert at Level"
+            android:entries="@array/level_entries"
+            android:entryValues="@array/level_values"
+            android:defaultValue="100"
+            android:summary="%s"
+
+            />
 
     </PreferenceCategory>
 
