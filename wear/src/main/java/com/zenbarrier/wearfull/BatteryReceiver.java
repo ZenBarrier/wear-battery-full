@@ -6,11 +6,8 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
-import android.util.Log;
 
 public class BatteryReceiver extends BroadcastReceiver {
-
-    private static final String BATTERYRECIEVER_RUNNING_KEY = "receiver_running";
 
     @Override
     public void onReceive(Context ctx, Intent intent){
@@ -32,9 +29,6 @@ public class BatteryReceiver extends BroadcastReceiver {
 
         final int charge_level_alert = mySharedPreferences.getInt("charge_level_alert", 100);
 
-        //allows app to check if this receiver is registered
-        mySharedPreferences.edit().putBoolean(BATTERYRECIEVER_RUNNING_KEY,true).apply();
-
         if(exact_battery_level && charging) {
             //send level to phone
             Intent notifyPhone = new Intent(ctx, NotifyMobileService.class);
@@ -44,7 +38,6 @@ public class BatteryReceiver extends BroadcastReceiver {
         }
 
 
-        Log.e("bat",batteryPct+">="+charge_level_alert);
         if(status == BatteryManager.BATTERY_STATUS_FULL || level == scale || batteryPct >= charge_level_alert) {
 
             //notify phone that wear device is full
@@ -52,9 +45,6 @@ public class BatteryReceiver extends BroadcastReceiver {
             notifyPhone.putExtra("path","/full");
             notifyPhone.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startService(notifyPhone);
-
-            //allows app to know that the receiver has been unregistered
-            mySharedPreferences.edit().putBoolean(BATTERYRECIEVER_RUNNING_KEY,false).apply();
 
             //stop checking battery to save power
             ctx.unregisterReceiver(this);
@@ -65,9 +55,6 @@ public class BatteryReceiver extends BroadcastReceiver {
             notifyPhone.putExtra("path","/unplugged");
             notifyPhone.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
             ctx.startService(notifyPhone);
-
-            //allows app to know that the receiver has been unregistered
-            mySharedPreferences.edit().putBoolean(BATTERYRECIEVER_RUNNING_KEY,false).apply();
 
             //stop checking battery to save power
             ctx.unregisterReceiver(this);

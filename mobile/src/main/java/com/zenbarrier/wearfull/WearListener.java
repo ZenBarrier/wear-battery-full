@@ -14,8 +14,11 @@ import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+
+import com.google.android.gms.wearable.CapabilityInfo;
 import com.google.android.gms.wearable.DataEventBuffer;
 import com.google.android.gms.wearable.MessageEvent;
+import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.WearableListenerService;
 
 import java.util.Locale;
@@ -33,7 +36,6 @@ public class WearListener extends WearableListenerService {
     public static boolean closedCharge = false;
 
     public WearListener(){}
-
 
     @Override
     public void onMessageReceived(MessageEvent messageEvent) {
@@ -270,8 +272,7 @@ public class WearListener extends WearableListenerService {
         }*/
     }
 
-    @Override
-    public void onPeerDisconnected(com.google.android.gms.wearable.Node peer){
+    private void disconnectedWatch(){
 
         //get app settings with manager
         final SharedPreferences mySharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
@@ -298,7 +299,21 @@ public class WearListener extends WearableListenerService {
     }
 
     @Override
-    public void onPeerConnected(com.google.android.gms.wearable.Node peer) {
+    public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
+        super.onCapabilityChanged(capabilityInfo);
+        Log.e("capability",capabilityInfo.getName());
+        if(capabilityInfo.getNodes().size() == 0){
+            Log.e("WearListener", "No devices");
+            disconnectedWatch();
+        }
+        for(Node node : capabilityInfo.getNodes()){
+            Log.e("WearListener", node.getDisplayName() +" : "+ node.isNearby());
+            reconnectedWatch();
+        }
+
+    }
+
+    private void reconnectedWatch() {
         // Remove the "forgot phone" notification when connection is restored.
         ((NotificationManager) getSystemService(NOTIFICATION_SERVICE))
                 .cancel(CONNECTION_LOST_ID);

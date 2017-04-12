@@ -8,8 +8,8 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
-import android.support.annotation.NonNull;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.Menu;
@@ -19,16 +19,12 @@ import android.widget.Toast;
 
 import com.google.android.gms.common.ConnectionResult;
 import com.google.android.gms.common.api.GoogleApiClient;
-import com.google.android.gms.common.api.ResultCallback;
 import com.google.android.gms.wearable.DataMap;
-import com.google.android.gms.wearable.MessageApi;
 import com.google.android.gms.wearable.Node;
 import com.google.android.gms.wearable.NodeApi;
 import com.google.android.gms.wearable.PutDataMapRequest;
 import com.google.android.gms.wearable.Wearable;
 
-import java.util.Collection;
-import java.util.HashSet;
 
 
 public class MainActivity extends AppCompatActivity
@@ -48,6 +44,7 @@ public class MainActivity extends AppCompatActivity
         mGoogleApiClient = new GoogleApiClient.Builder(this)
                 .addApi(Wearable.API)
                 .addConnectionCallbacks(this)
+                .enableAutoManage(this, this)
                 .addOnConnectionFailedListener(this)
                 .build();
 
@@ -63,7 +60,6 @@ public class MainActivity extends AppCompatActivity
             mGoogleApiClient.connect();
         }
         new StartWearableActivityTask().execute();
-
 
     }
 
@@ -90,9 +86,7 @@ public class MainActivity extends AppCompatActivity
 
         //noinspection SimplifiableIfStatement
         if (id == R.id.action_settings) {
-            Intent intent = new Intent();
-            intent.setClass(MainActivity.this, SetPreferenceActivity.class);
-            startActivityForResult(intent, 0);
+            startPreferencesActivity(null);
 
             return true;
         }
@@ -120,32 +114,15 @@ public class MainActivity extends AppCompatActivity
         Toast.makeText(this,"Failed to connect to wear.",Toast.LENGTH_LONG).show();
     }
 
+    private void sendStartActivityMessage() {
 
-    private Collection<String> getNodes() {
-        HashSet<String> results = new HashSet<>();
         NodeApi.GetConnectedNodesResult nodes =
                 Wearable.NodeApi.getConnectedNodes(mGoogleApiClient).await();
-
-        for (Node node : nodes.getNodes()) {
-            results.add(node.getId());
+        for(Node node : nodes.getNodes()) {
+            Wearable.MessageApi.sendMessage(
+                    mGoogleApiClient, node.getId(), "/start", new byte[0]);
+            Log.d(TAG,"sending");
         }
-
-        return results;
-    }
-
-    private void sendStartActivityMessage(String node) {
-        Wearable.MessageApi.sendMessage(
-                mGoogleApiClient, node, "/start", new byte[0]).setResultCallback(
-                new ResultCallback<MessageApi.SendMessageResult>() {
-                    @Override
-                    public void onResult(@NonNull MessageApi.SendMessageResult sendMessageResult) {
-                        if (!sendMessageResult.getStatus().isSuccess()) {
-                            Log.e(TAG, "Failed to send message with status code: "
-                                    + sendMessageResult.getStatus().getStatusCode());
-                        }
-                    }
-                }
-        );
     }
 
     public void writeReview(View view) {
@@ -162,10 +139,7 @@ public class MainActivity extends AppCompatActivity
 
         @Override
         protected Void doInBackground(Void... args) {
-            Collection<String> nodes = getNodes();
-            for (String node : nodes) {
-                sendStartActivityMessage(node);
-            }
+            sendStartActivityMessage();
             return null;
         }
     }
@@ -173,7 +147,7 @@ public class MainActivity extends AppCompatActivity
     /**
      * Sends an RPC to start a fullscreen Activity on the wearable.
      */
-    public void onStartWearableActivityClick(View view) {
+    public void startPreferencesActivity(View view) {
         Log.d(TAG, "Generating RPC");
 
         Intent intent = new Intent();

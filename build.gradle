@@ -19,7 +19,12 @@ allprojects {
 }
 
 ext {
-    TARGET_SDK_VERSION = 26
-    VERSION_CODE = 5
-    VERSION_NAME = '1.9'
+    TARGET_SDK_VERSION = 25
+    VERSION_CODE = 6
+    VERSION_NAME = '1.91'
+
+    COMPILE_SDK_VERSION = 25
+    BUILD_TOOLS_VERSION = '25.0.2'
+
+    APPLICATION_ID = "com.zenbarrier.wearfull"
 }

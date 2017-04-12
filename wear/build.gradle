@@ -1,12 +1,11 @@
 apply plugin: 'com.android.application'
 
-
 android {
-    compileSdkVersion 25
-    buildToolsVersion '25.0.2'
+    compileSdkVersion rootProject.ext.COMPILE_SDK_VERSION
+    buildToolsVersion rootProject.ext.BUILD_TOOLS_VERSION
 
     defaultConfig {
-        applicationId "com.zenbarrier.wearfull"
+        applicationId rootProject.ext.APPLICATION_ID
         minSdkVersion 20
         targetSdkVersion rootProject.ext.TARGET_SDK_VERSION
         versionCode rootProject.ext.VERSION_CODE
@@ -24,5 +23,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'com.google.android.wearable:wearable:2.0.1'
     compile 'com.google.android.support:wearable:2.0.1'
-    compile 'com.google.android.gms:play-services-wearable:9.6.0'
+    compile 'com.google.android.gms:play-services-wearable:10.2.1'
 }

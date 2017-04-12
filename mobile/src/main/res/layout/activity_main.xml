@@ -25,7 +25,7 @@
         android:drawableEnd="@android:drawable/ic_menu_preferences"
         android:drawableStart="@android:drawable/ic_menu_preferences"
         android:drawableTop="@android:drawable/ic_menu_preferences"
-        android:onClick="onStartWearableActivityClick"
+        android:onClick="startPreferencesActivity"
         android:text="@string/main_button"
         app:layout_constraintBottom_toTopOf="@+id/button_review"
         app:layout_constraintLeft_toLeftOf="parent"
