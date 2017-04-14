@@ -7,4 +7,5 @@
     <string name="key_pref_battery_complication_id">key_pref_battery_complication_id</string>
     <string name="key_pref_battery_complication_activated">key_pref_battery_complication_activated</string>
     <string name="key_pref_mobile_battery_level">key_pref_mobile_battery_level</string>
+    <string name="key_pref_after_mobile_result">key_pref_after_mobile_result</string>
 </resources>

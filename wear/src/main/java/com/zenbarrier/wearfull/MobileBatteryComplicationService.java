@@ -24,24 +24,31 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
     public void onComplicationUpdate(int complicationId, int dataType, ComplicationManager complicationManager) {
         Log.d(TAG, "Update: "+complicationId);
 
-        ComplicationData.Builder complicationData = new ComplicationData.Builder(ComplicationData.TYPE_RANGED_VALUE)
-                .setMinValue(0)
-                .setMaxValue(100);
-
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
 
+        boolean hasResult = preferences.getBoolean(getString(R.string.key_pref_after_mobile_result), false);
         boolean isWatchConnected = preferences.getBoolean(getString(R.string.key_pref_connected), false);
-        if(isWatchConnected){
-            int level = preferences.getInt(getString(R.string.key_pref_mobile_battery_level), 0);
-            complicationData.setValue(level)
-                    .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_icon));
+
+        if(hasResult || !isWatchConnected) {
+            ComplicationData.Builder complicationData = new ComplicationData.Builder(ComplicationData.TYPE_RANGED_VALUE)
+                    .setMinValue(0)
+                    .setMaxValue(100);
+
+
+            if (isWatchConnected) {
+                int level = preferences.getInt(getString(R.string.key_pref_mobile_battery_level), 0);
+                complicationData.setValue(level)
+                        .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_icon));
+            } else {
+                complicationData.setValue(0)
+                        .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_disconnected));
+            }
+            preferences.edit().putBoolean(getString(R.string.key_pref_after_mobile_result), false).apply();
+
+            complicationManager.updateComplicationData(complicationId, complicationData.build());
         }else{
-            complicationData.setValue(0)
-                    .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_disconnected));
+            NotifyMobileService.sendMessage(this, "/request_battery");
         }
-
-
-        complicationManager.updateComplicationData(complicationId, complicationData.build());
     }
 
     @Override

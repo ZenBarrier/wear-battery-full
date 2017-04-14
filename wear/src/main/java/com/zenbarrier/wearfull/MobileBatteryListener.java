@@ -114,9 +114,10 @@ public class MobileBatteryListener extends WearableListenerService {
         if(path.startsWith("/battery_level")) {
             int level = Integer.parseInt(path.replaceAll("\\D", ""));
             SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean prefFailed = true;
-            while(prefFailed) {
-                prefFailed = preferences.edit().putInt(getString(R.string.key_pref_mobile_battery_level), level).commit();
+            boolean prefSuccess = false;
+            while(!prefSuccess) {
+                prefSuccess = preferences.edit().putInt(getString(R.string.key_pref_mobile_battery_level), level)
+                        .putBoolean(getString(R.string.key_pref_after_mobile_result), true).commit();
             }
             updateBatteryComplication();
         }
