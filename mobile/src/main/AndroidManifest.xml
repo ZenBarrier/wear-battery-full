@@ -15,13 +15,30 @@
             android:exported="true">
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.CAPABILITY_CHANGED" />
-                <data android:scheme="wear" android:host="*"/>
+
+                <data
+                    android:host="*"
+                    android:scheme="wear" />
             </intent-filter>
             <intent-filter>
                 <action android:name="com.google.android.gms.wearable.MESSAGE_RECEIVED" />
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/charging"/>
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/full"/>
-                <data android:scheme="wear" android:host="*" android:pathPrefix="/unplugged"/>
+
+                <data
+                    android:host="*"
+                    android:pathPrefix="/charging"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/request_battery"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/full"
+                    android:scheme="wear" />
+                <data
+                    android:host="*"
+                    android:pathPrefix="/unplugged"
+                    android:scheme="wear" />
             </intent-filter>
         </service>
 
@@ -47,6 +64,10 @@
             android:name=".NotificationCloseReceiver"
             android:enabled="true"
             android:exported="false" />
+
+        <service
+            android:name=".SendMessageToWearService"
+            android:exported="false"></service>
     </application>
 
 </manifest>
