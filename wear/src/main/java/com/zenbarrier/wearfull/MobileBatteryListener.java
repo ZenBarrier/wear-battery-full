@@ -1,14 +1,11 @@
 package com.zenbarrier.wearfull;
 
-import android.annotation.SuppressLint;
-import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
-import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -119,7 +116,7 @@ public class MobileBatteryListener extends WearableListenerService {
                 prefSuccess = preferences.edit().putInt(getString(R.string.key_pref_mobile_battery_level), level)
                         .putBoolean(getString(R.string.key_pref_after_mobile_result), true).commit();
             }
-            updateBatteryComplication();
+            MobileBatteryComplicationService.updateBatteryComplication(this);
         }
     }
 
@@ -134,29 +131,8 @@ public class MobileBatteryListener extends WearableListenerService {
             preferences.edit().putBoolean(getString(R.string.key_pref_connected), false).apply();
         }
         Log.d(TAG, "capability changed: "+capabilityInfo.getNodes().size());
-        updateBatteryComplication();
+        MobileBatteryComplicationService.updateBatteryComplication(this);
     }
-
-    private void updateBatteryComplication(){
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Log.d(TAG, "update");
-
-        boolean isActiveComplication =
-                preferences.getBoolean(getString(R.string.key_pref_battery_complication_activated), false);
-        if(isActiveComplication) {
-            int complicationId =
-                    preferences.getInt(getString(R.string.key_pref_battery_complication_id), -1);
-
-            ComponentName componentName =
-                    new ComponentName(getApplicationContext(), MobileBatteryComplicationService.class);
-
-            ProviderUpdateRequester providerUpdateRequester =
-                    new ProviderUpdateRequester(getApplicationContext(), componentName);
-
-            providerUpdateRequester.requestUpdate(complicationId);
-        }
-    }
-
 
     private void reconnectedWatch() {
         //get battery intent

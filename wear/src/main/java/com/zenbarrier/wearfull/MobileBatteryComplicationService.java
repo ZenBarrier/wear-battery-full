@@ -1,13 +1,20 @@
 package com.zenbarrier.wearfull;
 
+import android.app.IntentService;
+import android.app.PendingIntent;
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.annotation.RequiresApi;
 import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.complications.ComplicationManager;
 import android.support.wearable.complications.ComplicationProviderService;
+import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
 
 /**
@@ -25,30 +32,39 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         Log.d(TAG, "Update: "+complicationId);
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putInt(getString(R.string.key_pref_battery_complication_id), complicationId);
 
         boolean hasResult = preferences.getBoolean(getString(R.string.key_pref_after_mobile_result), false);
         boolean isWatchConnected = preferences.getBoolean(getString(R.string.key_pref_connected), false);
+        int level = preferences.getInt(getString(R.string.key_pref_mobile_battery_level), 0);
 
-        if(hasResult || !isWatchConnected) {
-            ComplicationData.Builder complicationData = new ComplicationData.Builder(ComplicationData.TYPE_RANGED_VALUE)
-                    .setMinValue(0)
-                    .setMaxValue(100);
+        PendingIntent pendingIntent = PendingIntent.getService(
+                this, complicationId, new Intent(this, UpdateComplicationActionService.class), 0);
+
+        ComplicationData.Builder complicationData = new ComplicationData.Builder(ComplicationData.TYPE_RANGED_VALUE)
+                .setMinValue(0)
+                .setTapAction(pendingIntent)
+                .setMaxValue(100);
+
+        if (isWatchConnected) {
+            complicationData.setValue(level)
+                    .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_icon));
+        } else {
+            complicationData.setValue(0)
+                    .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_disconnected));
+        }
 
 
-            if (isWatchConnected) {
-                int level = preferences.getInt(getString(R.string.key_pref_mobile_battery_level), 0);
-                complicationData.setValue(level)
-                        .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_icon));
-            } else {
-                complicationData.setValue(0)
-                        .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_disconnected));
-            }
-            preferences.edit().putBoolean(getString(R.string.key_pref_after_mobile_result), false).apply();
+        complicationManager.updateComplicationData(complicationId, complicationData.build());
 
-            complicationManager.updateComplicationData(complicationId, complicationData.build());
-        }else{
+        if(!hasResult){
             NotifyMobileService.sendMessage(this, "/request_battery");
         }
+        else{
+            editor.putBoolean(getString(R.string.key_pref_after_mobile_result), false);
+        }
+        editor.apply();
     }
 
     @Override
@@ -68,5 +84,38 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
 
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit().putBoolean(getString(R.string.key_pref_battery_complication_activated), false).apply();
+    }
+
+    public static void updateBatteryComplication(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        Log.d(TAG, "update");
+
+        boolean isActiveComplication =
+                preferences.getBoolean(context.getString(R.string.key_pref_battery_complication_activated), false);
+        if(isActiveComplication) {
+            int complicationId =
+                    preferences.getInt(context.getString(R.string.key_pref_battery_complication_id), -1);
+
+            ComponentName componentName =
+                    new ComponentName(context, MobileBatteryComplicationService.class);
+
+            ProviderUpdateRequester providerUpdateRequester =
+                    new ProviderUpdateRequester(context, componentName);
+
+            providerUpdateRequester.requestUpdate(complicationId);
+        }
+    }
+
+    public static class UpdateComplicationActionService extends IntentService{
+
+        public UpdateComplicationActionService() {
+            super("UpdateComplicationActionService");
+        }
+
+        @Override
+        protected void onHandleIntent(@Nullable Intent intent) {
+            Log.d(UpdateComplicationActionService.class.getSimpleName(), "Intent called");
+            updateBatteryComplication(this);
+        }
     }
 }
