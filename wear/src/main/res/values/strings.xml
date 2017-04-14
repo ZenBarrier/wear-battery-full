@@ -3,4 +3,8 @@
 
     <string name="action_settings">Settings</string>
     <string name="hello_wear">I will let you know when I am done charging. :)</string>
+    <string name="key_pref_connected">key_pref_connected</string>
+    <string name="key_pref_battery_complication_id">key_pref_battery_complication_id</string>
+    <string name="key_pref_battery_complication_activated">key_pref_battery_complication_activated</string>
+    <string name="key_pref_mobile_battery_level">key_pref_mobile_battery_level</string>
 </resources>

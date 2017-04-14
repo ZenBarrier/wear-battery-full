@@ -1,11 +1,14 @@
 package com.zenbarrier.wearfull;
 
+import android.annotation.SuppressLint;
+import android.content.ComponentName;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.BatteryManager;
 import android.preference.PreferenceManager;
+import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
 
 import com.google.android.gms.common.ConnectionResult;
@@ -106,14 +109,50 @@ public class MobileBatteryListener extends WearableListenerService {
     @Override
     public void onMessageReceived(MessageEvent messageEvent){
         //Toast.makeText(this,"started",Toast.LENGTH_LONG).show();
-        Log.d(TAG,"got message to start!");
+        String path = messageEvent.getPath();
+        Log.d(TAG,path);
+        if(path.startsWith("/battery_level")) {
+            int level = Integer.parseInt(path.replaceAll("\\D", ""));
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean prefFailed = true;
+            while(prefFailed) {
+                prefFailed = preferences.edit().putInt(getString(R.string.key_pref_mobile_battery_level), level).commit();
+            }
+            updateBatteryComplication();
+        }
     }
 
     @Override
     public void onCapabilityChanged(CapabilityInfo capabilityInfo) {
         super.onCapabilityChanged(capabilityInfo);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(capabilityInfo.getNodes().size() > 0){
+            preferences.edit().putBoolean("key_pref_connected", true).apply();
             reconnectedWatch();
+        }else{
+            preferences.edit().putBoolean(getString(R.string.key_pref_connected), false).apply();
+        }
+        Log.d(TAG, "capability changed: "+capabilityInfo.getNodes().size());
+        updateBatteryComplication();
+    }
+
+    private void updateBatteryComplication(){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        Log.d(TAG, "update");
+
+        boolean isActiveComplication =
+                preferences.getBoolean(getString(R.string.key_pref_battery_complication_activated), false);
+        if(isActiveComplication) {
+            int complicationId =
+                    preferences.getInt(getString(R.string.key_pref_battery_complication_id), -1);
+
+            ComponentName componentName =
+                    new ComponentName(getApplicationContext(), MobileBatteryComplicationService.class);
+
+            ProviderUpdateRequester providerUpdateRequester =
+                    new ProviderUpdateRequester(getApplicationContext(), componentName);
+
+            providerUpdateRequester.requestUpdate(complicationId);
         }
     }
 

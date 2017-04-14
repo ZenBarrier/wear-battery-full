@@ -23,5 +23,5 @@ dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
     provided 'com.google.android.wearable:wearable:2.0.1'
     compile 'com.google.android.support:wearable:2.0.1'
-    compile 'com.google.android.gms:play-services-wearable:10.2.1'
+    compile rootProject.ext.PLAY_SERVICES_WEARABLE
 }

@@ -27,4 +27,6 @@ ext {
     BUILD_TOOLS_VERSION = '25.0.2'
 
     APPLICATION_ID = "com.zenbarrier.wearfull"
+
+    PLAY_SERVICES_WEARABLE =  'com.google.android.gms:play-services-wearable:9.4.0'
 }
