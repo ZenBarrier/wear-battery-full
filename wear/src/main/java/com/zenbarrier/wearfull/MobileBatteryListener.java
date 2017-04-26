@@ -125,7 +125,7 @@ public class MobileBatteryListener extends WearableListenerService {
         super.onCapabilityChanged(capabilityInfo);
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         if(capabilityInfo.getNodes().size() > 0){
-            preferences.edit().putBoolean("key_pref_connected", true).apply();
+            preferences.edit().putBoolean(getString(R.string.key_pref_connected), true).apply();
             reconnectedWatch();
         }else{
             preferences.edit().putBoolean(getString(R.string.key_pref_connected), false).apply();
