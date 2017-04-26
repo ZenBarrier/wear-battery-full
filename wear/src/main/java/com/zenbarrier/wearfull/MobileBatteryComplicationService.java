@@ -14,6 +14,7 @@ import android.support.annotation.RequiresApi;
 import android.support.wearable.complications.ComplicationData;
 import android.support.wearable.complications.ComplicationManager;
 import android.support.wearable.complications.ComplicationProviderService;
+import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
 
@@ -49,9 +50,11 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
 
         if (isWatchConnected) {
             complicationData.setValue(level)
+                    .setShortText(ComplicationText.plainText(level+"%"))
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_icon));
         } else {
             complicationData.setValue(0)
+                    .setShortText(ComplicationText.plainText("Severed"))
                     .setIcon(Icon.createWithResource(this, R.drawable.ic_phone_disconnected));
         }
 
