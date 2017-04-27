@@ -2,16 +2,23 @@ package com.zenbarrier.wearfull;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Bundle;
-import android.support.wearable.view.WatchViewStub;
-import android.widget.Button;
+import android.os.Handler;
+import android.os.ResultReceiver;
+import android.preference.PreferenceManager;
 import android.widget.TextView;
 
-import java.util.Locale;
+import com.google.android.wearable.intent.RemoteIntent;
+
 
 public class MainActivity extends Activity {
+
+    public final static String PLAY_STORE_APP_URI = "market://details?id=com.zenbarrier.wearfull";
 
     @SuppressLint("StringFormatInvalid")
     @Override
@@ -29,5 +36,23 @@ public class MainActivity extends Activity {
             textMain.setText(getString(R.string.hello_wear, "2.x"));
         }
 
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+        boolean isConnected = preferences.getBoolean(getString(R.string.key_pref_connected), true);
+        if(!isConnected) {
+            Intent intentAndroid =
+                    new Intent(Intent.ACTION_VIEW)
+                            .addCategory(Intent.CATEGORY_BROWSABLE)
+                            .setData(Uri.parse(PLAY_STORE_APP_URI));
+
+            RemoteIntent.startRemoteActivity(
+                    getApplicationContext(),
+                    intentAndroid,
+                    mResultReceiver);
+        }
+
     }
+
+    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()){
+
+    };
 }
