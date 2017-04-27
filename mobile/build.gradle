@@ -21,7 +21,7 @@ android {
 
 dependencies {
     compile fileTree(dir: 'libs', include: ['*.jar'])
-    wearApp project(':wear')
+    wearApp project(path: ':wear', configuration: 'wear1Release')
     compile 'com.android.support:appcompat-v7:25.3.1'
     compile rootProject.ext.PLAY_SERVICES_WEARABLE
     compile 'com.android.support:support-v4:25.3.1'
