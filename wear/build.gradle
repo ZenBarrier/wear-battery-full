@@ -25,6 +25,7 @@ android {
         }
         wear2 {
             minSdkVersion 25
+            versionCode rootProject.ext.VERSION_CODE + 1
         }
     }
 }
