@@ -8,8 +8,6 @@ import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.ResultReceiver;
 import android.preference.PreferenceManager;
 import android.widget.TextView;
 
@@ -47,12 +45,8 @@ public class MainActivity extends Activity {
             RemoteIntent.startRemoteActivity(
                     getApplicationContext(),
                     intentAndroid,
-                    mResultReceiver);
+                    null);
         }
 
     }
-
-    private final ResultReceiver mResultReceiver = new ResultReceiver(new Handler()){
-
-    };
 }

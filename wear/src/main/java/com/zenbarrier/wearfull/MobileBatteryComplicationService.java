@@ -7,6 +7,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.drawable.Icon;
+import android.net.Uri;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
@@ -17,6 +18,8 @@ import android.support.wearable.complications.ComplicationProviderService;
 import android.support.wearable.complications.ComplicationText;
 import android.support.wearable.complications.ProviderUpdateRequester;
 import android.util.Log;
+
+import com.google.android.wearable.intent.RemoteIntent;
 
 /**
  * Created by Anthony on 4/12/2017.
@@ -119,6 +122,21 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         protected void onHandleIntent(@Nullable Intent intent) {
             Log.d(UpdateComplicationActionService.class.getSimpleName(), "Intent called");
             updateBatteryComplication(this);
+
+            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
+            boolean isConnected = preferences.getBoolean(getString(R.string.key_pref_connected), true);
+
+            if(!isConnected) {
+                Intent intentAndroid =
+                        new Intent(Intent.ACTION_VIEW)
+                                .addCategory(Intent.CATEGORY_BROWSABLE)
+                                .setData(Uri.parse(MainActivity.PLAY_STORE_APP_URI));
+
+                RemoteIntent.startRemoteActivity(
+                        this,
+                        intentAndroid,
+                        null);
+            }
         }
     }
 }
