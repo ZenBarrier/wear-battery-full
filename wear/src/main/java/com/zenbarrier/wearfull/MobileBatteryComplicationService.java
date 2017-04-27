@@ -78,6 +78,8 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         super.onComplicationActivated(complicationId, type, manager);
         Log.d(TAG, "activated: "+complicationId);
 
+        openAppStoreOnPhone(this);
+
         SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
         preferences.edit().putBoolean(getString(R.string.key_pref_battery_complication_activated), true)
                 .putInt(getString(R.string.key_pref_battery_complication_id), complicationId).apply();
@@ -112,6 +114,23 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         }
     }
 
+    public static void openAppStoreOnPhone(Context context){
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(context);
+        boolean isConnected = preferences.getBoolean(context.getString(R.string.key_pref_connected), true);
+
+        if(!isConnected) {
+            Intent intentAndroid =
+                    new Intent(Intent.ACTION_VIEW)
+                            .addCategory(Intent.CATEGORY_BROWSABLE)
+                            .setData(Uri.parse(MainActivity.PLAY_STORE_APP_URI));
+
+            RemoteIntent.startRemoteActivity(
+                    context,
+                    intentAndroid,
+                    null);
+        }
+    }
+
     public static class UpdateComplicationActionService extends IntentService{
 
         public UpdateComplicationActionService() {
@@ -122,21 +141,7 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         protected void onHandleIntent(@Nullable Intent intent) {
             Log.d(UpdateComplicationActionService.class.getSimpleName(), "Intent called");
             updateBatteryComplication(this);
-
-            SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-            boolean isConnected = preferences.getBoolean(getString(R.string.key_pref_connected), true);
-
-            if(!isConnected) {
-                Intent intentAndroid =
-                        new Intent(Intent.ACTION_VIEW)
-                                .addCategory(Intent.CATEGORY_BROWSABLE)
-                                .setData(Uri.parse(MainActivity.PLAY_STORE_APP_URI));
-
-                RemoteIntent.startRemoteActivity(
-                        this,
-                        intentAndroid,
-                        null);
-            }
+            openAppStoreOnPhone(this);
         }
     }
 }

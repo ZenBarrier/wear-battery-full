@@ -34,19 +34,7 @@ public class MainActivity extends Activity {
             textMain.setText(getString(R.string.hello_wear, "2.x"));
         }
 
-        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(this);
-        boolean isConnected = preferences.getBoolean(getString(R.string.key_pref_connected), true);
-        if(!isConnected) {
-            Intent intentAndroid =
-                    new Intent(Intent.ACTION_VIEW)
-                            .addCategory(Intent.CATEGORY_BROWSABLE)
-                            .setData(Uri.parse(PLAY_STORE_APP_URI));
-
-            RemoteIntent.startRemoteActivity(
-                    getApplicationContext(),
-                    intentAndroid,
-                    null);
-        }
+        MobileBatteryComplicationService.openAppStoreOnPhone(this);
 
     }
 }
