@@ -2,16 +2,10 @@ package com.zenbarrier.wearfull;
 
 import android.annotation.SuppressLint;
 import android.app.Activity;
-import android.content.Intent;
-import android.content.SharedPreferences;
 import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
-import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.widget.TextView;
-
-import com.google.android.wearable.intent.RemoteIntent;
 
 
 public class MainActivity extends Activity {
