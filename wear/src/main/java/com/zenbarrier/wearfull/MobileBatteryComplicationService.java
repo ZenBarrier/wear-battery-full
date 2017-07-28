@@ -40,7 +40,7 @@ public class MobileBatteryComplicationService extends ComplicationProviderServic
         editor.putInt(getString(R.string.key_pref_battery_complication_id), complicationId);
 
         boolean hasResult = preferences.getBoolean(getString(R.string.key_pref_after_mobile_result), false);
-        boolean isWatchConnected = preferences.getBoolean(getString(R.string.key_pref_connected), false);
+        boolean isWatchConnected = preferences.getBoolean(getString(R.string.key_pref_connected), true);
         int level = preferences.getInt(getString(R.string.key_pref_mobile_battery_level), 0);
 
         PendingIntent pendingIntent = PendingIntent.getService(
