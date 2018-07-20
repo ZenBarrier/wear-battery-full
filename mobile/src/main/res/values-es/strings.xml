@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Wear Battery Full</string>
+    <string name="action_settings">Ajustes</string>
+    <string name="battery_notification_title_template">Batería: %1$s</string>
+    <string name="level_notification_title_template">Nivel: %1$s</string>
+    <string name="level_notification_text">La batería del reloj está al %1$s por ciento.</string>
+    <string name="pref_charging">Mostrar Batería Cargando</string>
+    <string name="pref_exact_battery_level">Mostrar nivel de batería</string>
+    <string name="pref_exact_battery_level_summary_on">Esto puede afectar a la duración de la batería del teléfono si se activa.</string>
+    <string name="pref_show_charging_summary_on">Las notificaciones mostrarán si el reloj se está cargando.</string>
+    <string name="pref_show_charging_summary_off">Las notificaciones no mostrarán si el reloj se está cargando.</string>
+    <string name="pref_exact_battery_level_summary_off">El nivel the batería del reloj no se mostrará en las notificaciones.</string>
+    <string name="title_activity_settings">Ajustes</string>
+    <string name="pref_select_ringtone">Sonido de Notificación</string>
+    <string name="pref_select_ringtone_summary">Configura el sonido para notificaciones</string>
+    <string name="pref_vibrate">Vibrar</string>
+    <string name="pref_vibrate_summary_on">Las notificaciones harán que el teléfono vibre.</string>
+    <string name="pref_vibrate_summary_off">No vibrará en las notificaciones.</string>
+    <string name="main_activity_intro">Esta app te avisará cuando la batería de tu dispositivo Android Wear esté completamente cargada.</string>
+    <string name="main_button">Ir a Ajustes</string>
+    <string name="pref_disconnected">Notificar si el dispositivo Wear se desconecta</string>
+    <string name="pref_insistent">Repetir aviso hasta que se descarte</string>
+    <string name="pref_insistent_summary">El dispositivo continuará avisando hasta que leas la notificación o la descartes.</string>
+    <string name="write_review">Escribir Opinión</string>
+</resources>
